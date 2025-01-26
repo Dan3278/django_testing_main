@@ -38,6 +38,8 @@ class TestLogic(TestBase):
         initial_notes = list(Note.objects.all())
         response = self.client.post(URL_NOTES_ADD, data=self.form_data)
         expected_url = f'{URL_LOGIN}?next={URL_NOTES_ADD}'
+    #  Все урлы нужно рассчитать один раз заранее, до теста.
+    #  Но я уже их расчитал в base_test.py
         self.assertRedirects(response, expected_url)
         self.assertEqual(Note.objects.count(), len(initial_notes))
         
