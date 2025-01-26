@@ -102,15 +102,6 @@ def enable_db_access_for_all_tests(
     pass
 
 
-@pytest.fixture
-def url_edit_comment(comment):
-    return reverse('news:edit', args=(comment.id,))
-
-
-@pytest.fixture
-def url_delete_comment(comment):
-    return reverse('news:delete', args=(comment.id,))
-
 
 @pytest.fixture
 def url_home():
