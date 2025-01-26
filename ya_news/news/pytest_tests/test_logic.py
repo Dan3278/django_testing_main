@@ -25,10 +25,11 @@ def test_anon_cannot_add_comments(
 def test_author_can_delete_comment(
     author_client,
     delete_comment_url,
-    redirect_url_delete_comment
+    detail_news_url,
+    redirect_url_to_detail
 ):
     response = author_client.delete(delete_comment_url)
-    assertRedirects(response, redirect_url_delete_comment)
+    assertRedirects(response, redirect_url_to_detail)
     assert Comment.objects.count() == 0
 
 
@@ -74,11 +75,11 @@ def test_posting_evil_comment(author_client,
 
 def test_author_can_edit_comment(
     author_client, comment, edit_comment_url,
-    detail_news_url, redirect_url_edit_comment
+    detail_news_url, redirect_url_to_detail
 ):
     response = author_client.post(edit_comment_url,
                                   data=FORM_DATA)
-    assertRedirects(response, redirect_url_edit_comment)
+    assertRedirects(response, redirect_url_to_detail)
     updated_comment = Comment.objects.get(pk=comment.pk)
     assert updated_comment.text == FORM_DATA['text']
     assert updated_comment.author == comment.author
@@ -87,12 +88,12 @@ def test_author_can_edit_comment(
 
 def test_authorized_user_can_send_a_comment(
     author_client, author, detail_news_url, news,
-    redirect_url_detail_news
+    redirect_url_to_detail
 ):
     Comment.objects.all().delete()
     response = author_client.post(detail_news_url,
                                   data=FORM_DATA)
-    assertRedirects(response, redirect_url_detail_news)
+    assertRedirects(response, redirect_url_to_detail)
     assert Comment.objects.all().count() == 1
     comment = Comment.objects.get()
     assert comment.text == FORM_DATA['text']
