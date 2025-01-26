@@ -20,7 +20,7 @@ def test_pages_availability(client, url_fixture):
 
 @ pytest.mark.django_db
 @ pytest.mark.parametrize("client_fixture, expected_status", [
-    (pytest.lazy_fixture('auth_client'), HTTPStatus.OK),
+    (pytest.lazy_fixture('author_client'), HTTPStatus.OK),
     (pytest.lazy_fixture('client'), HTTPStatus.FOUND)
 ]
 )
