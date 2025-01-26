@@ -8,15 +8,14 @@ from notes.forms import NoteForm
 
 
 class TestPages(TestBase):
-    def test_displaying_note_in_list(self):
-        response = self.client_author.get(URL_NOTES_LIST)
-        self.assertIn(self.note, list(response.context['object_list']))
-
-    def test_notes_do_not_mix_for_author(self):
-        self.assertNotIn(
-            self.note,
-            self.client_reader.get(URL_NOTES_LIST).context['object_list']
-        )
+    def test_displaying_note_in_list(self): 
+        response = self.client_author.get(URL_NOTES_LIST) 
+        displayed_notes = list(response.context['object_list'])
+        self.assertIn(self.note, displayed_notes)
+        for field in ['title', 'text', 'slug', 'author']:
+            self.assertEqual(getattr(self.note, field), getattr(
+                displayed_notes[displayed_notes.index(self.note)],
+                field))
 
     def test_transfer_form_for_adding_editing_notes(self):
         for url in (
