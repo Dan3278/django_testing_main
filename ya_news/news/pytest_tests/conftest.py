@@ -3,17 +3,23 @@ from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 from django.utils import timezone
+
 import pytest
 from news.models import News, Comment
+
+
 TOTAL_COMMENT = 10
+
 
 @pytest.fixture
 def author(django_user_model):
     return django_user_model.objects.create(username='Автор')
 
+
 @pytest.fixture
 def not_author(django_user_model):
     return django_user_model.objects.create(username='Не автор')
+
 
 @pytest.fixture
 def author_client(author):
@@ -21,11 +27,13 @@ def author_client(author):
     client.force_login(author)
     return client
 
+
 @pytest.fixture
 def not_author_client(not_author):
     client = Client()
     client.force_login(not_author)
     return client
+
 
 @pytest.fixture
 def news():
@@ -44,6 +52,7 @@ def comment(author, news):
         text='Текст',
     )
     return comment
+
 
 @pytest.fixture
 def lot_news():
@@ -92,21 +101,26 @@ def enable_db_access_for_all_tests(
 ):
     pass
 
+
 @pytest.fixture
 def url_news_detail(news):
     return reverse('news:detail', args=(news.id,))
+
 
 @pytest.fixture
 def url_edit_comment(comment):
     return reverse('news:edit', args=(comment.id,))
 
+
 @pytest.fixture
 def url_delete_comment(comment):
     return reverse('news:delete', args=(comment.id,))
 
+
 @pytest.fixture
 def url_home():
     return reverse('news:home')
+
 
 @pytest.fixture
 def url_login():
