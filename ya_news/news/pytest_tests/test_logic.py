@@ -93,7 +93,7 @@ def test_authorized_user_can_send_a_comment(
     Comment.objects.all().delete()
     response = author_client.post(detail_news_url,
                                   data=FORM_DATA)
-    assertRedirects(response, redirect_url)
+    assertRedirects(response, redirect_url_detail_news)
     assert Comment.objects.all().count() == 1
     comment = Comment.objects.get()
     assert comment.text == FORM_DATA['text']
