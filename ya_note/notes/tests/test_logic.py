@@ -1,7 +1,5 @@
 from http import HTTPStatus
 
-from django.test import Client
-
 from .base_test import (
     TestBase,
     URL_NOTES_ADD,
@@ -42,7 +40,7 @@ class TestLogic(TestBase):
     #  Но я уже их расчитал в base_test.py
         self.assertRedirects(response, expected_url)
         self.assertEqual(Note.objects.count(), len(initial_notes))
-        
+
         final_notes = list(Note.objects.all())
         self.assertListEqual(initial_notes, final_notes)
 
