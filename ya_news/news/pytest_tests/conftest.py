@@ -102,7 +102,6 @@ def enable_db_access_for_all_tests(
     pass
 
 
-
 @pytest.fixture
 def url_home():
     return reverse('news:home')
