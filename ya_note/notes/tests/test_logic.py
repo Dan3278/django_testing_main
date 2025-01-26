@@ -1,11 +1,9 @@
 from http import HTTPStatus
-from pytils.translit import slugify
 
 from .base_test import (
     TestBase,
     URL_NOTES_ADD,
     URL_NOTES_SUCCESS,
-    REDIRECT_URL_NOTES_ADD,
     URL_NOTES_EDIT,
     URL_NOTES_DELETE,
     URL_LOGIN
