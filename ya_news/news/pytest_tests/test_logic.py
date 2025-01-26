@@ -1,6 +1,8 @@
 from http import HTTPStatus
+
 import pytest
 from pytest_django.asserts import assertRedirects
+
 from news.forms import BAD_WORDS, WARNING
 from news.models import Comment
 
