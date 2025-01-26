@@ -123,6 +123,7 @@ def url_signup():
     return reverse('users:signup')
 
 
+
 @pytest.fixture
 def redirect_url_to_detail(detail_news_url):
     return f'{detail_news_url}#comments'
