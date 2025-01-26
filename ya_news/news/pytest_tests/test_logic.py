@@ -25,7 +25,6 @@ def test_anon_cannot_add_comments(
 def test_author_can_delete_comment(
     author_client,
     delete_comment_url,
-    detail_news_url,
     redirect_url_delete_comment
 ):
     response = author_client.delete(delete_comment_url)

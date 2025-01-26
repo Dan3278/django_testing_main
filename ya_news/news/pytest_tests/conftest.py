@@ -123,16 +123,15 @@ def url_signup():
 
 
 @pytest.fixture
-def redirect_url_delete_comment(url_login,
-                                delete_comment_url):
-    return f"{url_login}?next={delete_comment_url}"
+def redirect_url_delete_comment(detail_news_url):
+    return f'{detail_news_url}#comments'
 
 
 @pytest.fixture
-def redirect_url_edit_comment(url_login, edit_comment_url):
-    return f"{url_login}?next={edit_comment_url}"
+def redirect_url_edit_comment(detail_news_url):
+    return f'{detail_news_url}#comments'
 
 
 @pytest.fixture
 def redirect_url_detail_news(detail_news_url):
-    return f"{detail_news_url}#comments"
+    return f'{detail_news_url}#comments'
