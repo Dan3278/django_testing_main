@@ -48,7 +48,8 @@ def test_authorized_user_cannot_edit_comments(
 
 
 @pytest.mark.django_db
-def test_user_cant_delete_comment_of_other_users(author_client, delete_comment_url):
+def test_user_cant_delete_comment_of_other_users(author_client,
+                                                 delete_comment_url):
     """Нельзя удалять чужие коментарии."""
     response = author_client.delete(delete_comment_url)
     assert response.status_code == HTTPStatus.FOUND
