@@ -8,8 +8,8 @@ from notes.forms import NoteForm
 
 
 class TestPages(TestBase):
-    def test_displaying_note_in_list(self): 
-        response = self.client_author.get(URL_NOTES_LIST) 
+    def test_displaying_note_in_list(self):
+        response = self.client_author.get(URL_NOTES_LIST)
         displayed_notes = list(response.context['object_list'])
         self.assertIn(self.note, displayed_notes)
         for field in ['title', 'text', 'slug', 'author']:
