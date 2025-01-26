@@ -35,14 +35,29 @@ def test_author_can_delete_comment(
     assert Comment.objects.count() == 0
 
 
-def test_authorized_user_cannot_edit_comments(
+def test_not_author_cannot_edit_comment(
     not_author_client, comment, edit_comment_url
 ):
+    """Не автор НЕ может изменять чужие коментарии."""
     response = not_author_client.post(edit_comment_url,
                                       data=FORM_DATA)
     assert response.status_code == HTTPStatus.NOT_FOUND
     updated_comment = Comment.objects.get(pk=comment.pk)
     assert updated_comment.text == comment.text
+    assert updated_comment.author == comment.author
+    assert updated_comment.news == comment.news
+
+
+def test_author_can_edit_comment(
+    author_client, comment, edit_comment_url,
+    detail_news_url, redirect_url_to_detail
+):
+    """Автор может изменять свои комментарии."""
+    response = author_client.post(edit_comment_url,
+                                  data=FORM_DATA)
+    assertRedirects(response, redirect_url_to_detail)
+    updated_comment = Comment.objects.get(pk=comment.pk)
+    assert updated_comment.text == FORM_DATA['text']
     assert updated_comment.author == comment.author
     assert updated_comment.news == comment.news
 
@@ -69,19 +84,6 @@ def test_posting_evil_comment(author_client,
         response.context['form'].errors['text']
     )
     assert Comment.objects.count() == 0
-
-
-def test_author_can_edit_comment(
-    author_client, comment, edit_comment_url,
-    detail_news_url, redirect_url_to_detail
-):
-    response = author_client.post(edit_comment_url,
-                                  data=FORM_DATA)
-    assertRedirects(response, redirect_url_to_detail)
-    updated_comment = Comment.objects.get(pk=comment.pk)
-    assert updated_comment.text == FORM_DATA['text']
-    assert updated_comment.author == comment.author
-    assert updated_comment.news == comment.news
 
 
 def test_authorized_user_can_create_comment(
