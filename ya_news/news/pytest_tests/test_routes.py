@@ -26,7 +26,7 @@ def test_pages_availability(client, url_fixture):
 )
 @ pytest.mark.parametrize("url_fixture", [
     pytest.lazy_fixture('edit_url'),
-    pytest.lazy_fixture('delete_url')
+    pytest.lazy_fixture('url_delete')
 ]
 )
 def test_availability_for_comment_edit_and_delete(client_fixture,
@@ -40,7 +40,7 @@ def test_availability_for_comment_edit_and_delete(client_fixture,
 @ pytest.mark.django_db
 @ pytest.mark.parametrize("url_fixture", [
     pytest.lazy_fixture('edit_url'),
-    pytest.lazy_fixture('delete_url')
+    pytest.lazy_fixture('url_delete')
 ]
 )
 def test_redirect_for_anonymous_client(client, url_fixture):

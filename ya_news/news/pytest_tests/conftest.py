@@ -103,11 +103,6 @@ def enable_db_access_for_all_tests(
 
 
 @pytest.fixture
-def url_news_detail(news):
-    return reverse('news:detail', args=(news.id,))
-
-
-@pytest.fixture
 def url_edit_comment(comment):
     return reverse('news:edit', args=(comment.id,))
 
