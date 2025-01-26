@@ -47,17 +47,12 @@ def test_authorized_user_cannot_edit_comments(
     assert updated_comment.news == comment.news
 
 
-def test_user_cant_delete_comment_of_another_user(
-    not_author_client, delete_comment_url, comment
-):
-    initial_count = Comment.objects.count()
-    response = not_author_client.delete(delete_comment_url)
-    assert response.status_code == HTTPStatus.NOT_FOUND
-    assert Comment.objects.count() == initial_count
-    retrieved_comment = Comment.objects.get(pk=comment.pk)
-    assert retrieved_comment.text == comment.text
-    assert retrieved_comment.author == comment.author
-    assert retrieved_comment.news == comment.news
+@pytest.mark.django_db
+def test_user_cant_delete_comment_of_other_users(author_client, delete_comment_url):
+    """Нельзя удалять чужие коментарии."""
+    response = author_client.delete(delete_comment_url)
+    assert response.status_code == HTTPStatus.FOUND
+    assert Comment.objects.count() == 0
 
 
 @pytest.mark.parametrize('evil_words', EVIL_WORDS)
