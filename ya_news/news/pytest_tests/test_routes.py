@@ -6,11 +6,11 @@ from django.urls import reverse
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('url_fixture', [
-    pytest.lazy_fixture('home_url'),
-    pytest.lazy_fixture('detail_url'),
-    pytest.lazy_fixture('login_url'),
-    pytest.lazy_fixture('logout_url'),
-    pytest.lazy_fixture('signup_url')
+    pytest.lazy_fixture('url_home'),
+    pytest.lazy_fixture('detail_news_url'),
+    pytest.lazy_fixture('url_login'),
+    pytest.lazy_fixture('url_logout'),
+    pytest.lazy_fixture('url_signup')
 ]
 )
 def test_pages_availability(client, url_fixture):
