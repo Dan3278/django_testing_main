@@ -83,7 +83,7 @@ def test_author_can_edit_comment(
     assert updated_comment.news == comment.news
 
 
-def test_authorized_user_can_send_a_comment(
+def test_authorized_user_can_create_comment(
     author_client, author, detail_news_url, news,
     redirect_url_to_detail
 ):
