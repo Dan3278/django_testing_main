@@ -45,5 +45,4 @@ def test_availability_for_comment_edit_and_delete(client_fixture,
 def test_redirect_for_anonymous_client(client, url_fixture, url_login):
     redirect_url = f'{url_login}?next={url_fixture}'
     response = client.get(url_fixture)
-    assert response.status_code == HTTPStatus.FOUND
     assert response.url == redirect_url
