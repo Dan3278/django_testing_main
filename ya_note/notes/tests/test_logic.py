@@ -37,9 +37,8 @@ class TestLogic(TestBase):
         expected_url = EXPECTED_URL
         self.assertRedirects(response, expected_url)
         self.assertEqual(Note.objects.count(), len(initial_notes))
-
         final_notes = list(Note.objects.all())
-        self.assertListEqual(initial_notes, final_notes)
+        self.assertCountEqual(initial_notes, final_notes)
 
     def test_author_can_edit_note(self):
         self.client_author.post(URL_NOTES_EDIT, self.form_data)
