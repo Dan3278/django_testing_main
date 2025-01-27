@@ -37,7 +37,7 @@ def test_author_can_delete_comment(
 
 def test_user_cant_delete_comment_of_other_users(not_author_client,
                                                  comment,
-                                                 delete_comment_url): 
+                                                 delete_comment_url):
     """Нельзя удалять чужие комментарии."""
     initial_comment_count = Comment.objects.count()
     response = not_author_client.delete(delete_comment_url)

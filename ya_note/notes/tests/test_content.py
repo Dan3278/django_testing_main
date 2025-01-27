@@ -7,7 +7,7 @@ from .base_test import (
 from notes.forms import NoteForm
 
 
-class TestPages(TestBase): 
+class TestPages(TestBase):
 
     def test_note_not_displayed_for_non_author(self):
         response = self.client_reader.get(URL_NOTES_LIST)

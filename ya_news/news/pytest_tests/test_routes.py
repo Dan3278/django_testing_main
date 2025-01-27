@@ -15,8 +15,9 @@ DELETE_COMMENT_URL = pytest.lazy_fixture('delete_comment_url')
 AUTHOR_CLIENT = pytest.lazy_fixture('author_client')
 NOT_AUTHOR_CLIENT = pytest.lazy_fixture('not_author_client')
 
+
 @pytest.mark.parametrize('url_fixture, client_fixture, expected_status',
-                         [ 
+                         [
                              (URL_HOME, AUTHOR_CLIENT, EXPECTED_OK),
                              (URL_DETAIL_NEWS, AUTHOR_CLIENT, EXPECTED_OK),
                              (URL_LOGIN, AUTHOR_CLIENT, EXPECTED_OK),
