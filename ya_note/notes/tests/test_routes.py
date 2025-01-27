@@ -13,7 +13,7 @@ from .base_test import (
 
 class TestRoutes(TestBase):
     def test_http_status_codes(self):
-        for url, user, status in (
+        for url, client, status in (
             (URL_NOTES_ADD, self.client_reader,
              HTTPStatus.OK),
             (URL_NOTES_LIST, self.client_reader,
@@ -75,8 +75,8 @@ class TestRoutes(TestBase):
             (URL_NOTES_DELETE, self.client,
              HTTPStatus.FOUND),
         ):
-            with self.subTest(url=url, user=user):
-                self.assertEqual(user.get(url).status_code,
+            with self.subTest(url=url, user=client):
+                self.assertEqual(client.get(url).status_code,
                                  status)
 
     def test_redirects(self):
@@ -88,9 +88,9 @@ class TestRoutes(TestBase):
             (URL_NOTES_EDIT, REDIRECT_URL_NOTES_EDIT),
             (URL_NOTES_DELETE, REDIRECT_URL_NOTES_DELETE),
         ):
-            user = self.client
-            with self.subTest(url=url, user=user):
+            client = self.client
+            with self.subTest(url=url, user=client):
                 self.assertRedirects(
-                    user.get(url),
+                    client.get(url),
                     redirect,
                 )
