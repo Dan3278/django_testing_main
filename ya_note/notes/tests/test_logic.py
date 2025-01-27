@@ -31,11 +31,12 @@ class TestLogic(TestBase):
         self.assertEqual(initial_notes, final_notes)
 
     def test_anon_user_cant_create_note(self):
-        initial_notes_count = Note.objects.count()
+        initial_notes = list(Note.objects.all().order_by('pk'))
         response = self.client.post(URL_NOTES_ADD, data=self.form_data)
         expected_url = REDIRECT_URL_NOTES_ADD
         self.assertRedirects(response, expected_url)
-        self.assertEqual(Note.objects.count(), initial_notes_count)
+        final_notes = list(Note.objects.all().order_by('pk'))
+        self.assertEqual(initial_notes, final_notes)
 
     def test_author_can_edit_note(self):
         self.client_author.post(URL_NOTES_EDIT, self.form_data)
@@ -55,10 +56,12 @@ class TestLogic(TestBase):
         self.assertEqual(note.slug, self.note.slug)
 
     def test_author_can_delete_note(self):
+        initial_notes_count = Note.objects.count()
         response = self.client_author.post(URL_NOTES_DELETE,
                                            {'pk': self.note.pk})
         self.assertRedirects(response, URL_NOTES_SUCCESS)
         self.assertFalse(Note.objects.filter(pk=self.note.pk).exists())
+        self.assertEqual(Note.objects.count(), initial_notes_count - 1)
 
     def test_reader_cant_delete_note(self):
         note_count = Note.objects.count()
@@ -70,4 +73,3 @@ class TestLogic(TestBase):
         self.assertEqual(note.title, self.note.title)
         self.assertEqual(note.text, self.note.text)
         self.assertEqual(note.slug, self.note.slug)
-        self.assertEqual(note.author, self.note.author)

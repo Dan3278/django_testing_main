@@ -19,13 +19,6 @@ def assert_comment_count(expected_count):
     assert Comment.objects.count() == expected_count
 
 
-def assert_comment_fields(comment, expected_data):
-    """Проверяет, что поля комментария соответствуют ожидаемым значениям."""
-    assert comment.text == expected_data['text']
-    assert comment.author == expected_data['author']
-    assert comment.news == expected_data['news']
-
-
 def test_anon_cannot_add_comments(client, detail_news_url):
     client.post(detail_news_url, data=FORM_DATA)
     assert_comment_count(0)
@@ -49,6 +42,11 @@ def test_user_cant_delete_comment_of_other_users(not_author_client,
     assert response.status_code == HTTPStatus.FORBIDDEN
     assert_comment_count(initial_comment_count)
 
+    deleted_comment = Comment.objects.get(pk=comment.pk)
+    assert deleted_comment.text == comment.text
+    assert deleted_comment.author == comment.author
+    assert deleted_comment.news == comment.news
+
 
 def test_author_can_edit_comment(author_client,
                                  comment,
@@ -58,9 +56,10 @@ def test_author_can_edit_comment(author_client,
     response = author_client.post(edit_comment_url, data=FORM_DATA)
     assertRedirects(response, redirect_url_to_detail)
     updated_comment = Comment.objects.get(pk=comment.pk)
-    assert_comment_fields(updated_comment, {**FORM_DATA,
-                                            'author': comment.author,
-                                            'news': comment.news})
+
+    assert updated_comment.text == FORM_DATA['text']
+    assert updated_comment.author == comment.author
+    assert updated_comment.news == comment.news
 
 
 @pytest.mark.django_db
@@ -79,8 +78,7 @@ def test_posting_evil_comment(author_client, detail_news_url, evil_words):
     assert response.status_code == HTTPStatus.OK
     assert 'form' in response.context
     assert 'text' in response.context['form'].errors
-    assert any(
-        WARNING in msg for msg in response.context['form'].errors['text'])
+    assert any(WARNING in msg for msg in response.context['form'].errors['text'])
     assert_comment_count(0)
 
 
@@ -94,5 +92,7 @@ def test_authorized_user_can_create_comment(author_client,
     assertRedirects(response, redirect_url_to_detail)
     assert_comment_count(1)
     comment = Comment.objects.get()
-    assert_comment_fields(comment,
-                          {**FORM_DATA, 'author': author, 'news': news})
+
+    assert comment.text == FORM_DATA['text']
+    assert comment.author == author
+    assert comment.news == news
