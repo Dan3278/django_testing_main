@@ -3,6 +3,7 @@ import pytest
 
 EXPECTED_OK = HTTPStatus.OK
 EXPECTED_NOT_FOUND = HTTPStatus.NOT_FOUND
+EXPECTED_REDIRECT = HTTPStatus.FOUND  # HTTP 302
 
 URL_HOME = pytest.lazy_fixture('url_home')
 URL_DETAIL_NEWS = pytest.lazy_fixture('detail_news_url')
@@ -14,7 +15,6 @@ DELETE_COMMENT_URL = pytest.lazy_fixture('delete_comment_url')
 
 AUTHOR_CLIENT = pytest.lazy_fixture('author_client')
 NOT_AUTHOR_CLIENT = pytest.lazy_fixture('not_author_client')
-
 
 @pytest.mark.parametrize('url_fixture, client_fixture, expected_status',
                          [
@@ -31,8 +31,13 @@ NOT_AUTHOR_CLIENT = pytest.lazy_fixture('not_author_client')
                               EXPECTED_NOT_FOUND),
                              (URL_LOGIN, NOT_AUTHOR_CLIENT, EXPECTED_OK),
                              (URL_SIGNUP, NOT_AUTHOR_CLIENT, EXPECTED_OK),
-                         ]
-                         )
+                             (URL_HOME, NOT_AUTHOR_CLIENT, EXPECTED_OK),
+                             (EDIT_COMMENT_URL, NOT_AUTHOR_CLIENT,
+                              EXPECTED_NOT_FOUND),
+                             (DELETE_COMMENT_URL, NOT_AUTHOR_CLIENT,
+                              EXPECTED_NOT_FOUND),
+                         ] 
+                         ) 
 def test_pages_availability(url_fixture, client_fixture, expected_status):
     response = client_fixture.get(url_fixture)
     assert response.status_code == expected_status
