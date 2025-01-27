@@ -11,9 +11,9 @@ from .base_test import (
 from notes.models import Note
 
 
-class TestLogic(TestBase): 
-    def posting_and_checking(self): 
-        Note.objects.all().delete() 
+class TestLogic(TestBase):
+    def posting_and_checking(self):
+        Note.objects.all().delete()
         response = self.client_author.post(URL_NOTES_ADD, data=self.form_data)
         self.assertRedirects(response, URL_NOTES_SUCCESS)
         self.assertEqual(Note.objects.count(), 1)
@@ -54,7 +54,7 @@ class TestLogic(TestBase):
         self.assertEqual(note.text, self.note.text)
         self.assertEqual(note.slug, self.note.slug)
 
-    def test_author_can_delete_note(self): 
+    def test_author_can_delete_note(self):
         response = self.client_author.post(URL_NOTES_DELETE,
                                            {'pk': self.note.pk})
         self.assertRedirects(response, URL_NOTES_SUCCESS)

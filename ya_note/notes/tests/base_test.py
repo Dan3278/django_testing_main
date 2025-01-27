@@ -37,6 +37,7 @@ REDIRECT_URLS = {
     'delete': create_redirect_url(URL_NOTES_DELETE),
 }
 
+
 class TestBase(TestCase):
     @classmethod
     def setUpTestData(cls):
