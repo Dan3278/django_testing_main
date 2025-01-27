@@ -22,8 +22,20 @@ REDIRECT_URL_NOTES_SUCCESS = f'{URL_LOGIN}?next={URL_NOTES_SUCCESS}'
 REDIRECT_URL_NOTES_DETAIL = f'{URL_LOGIN}?next={URL_NOTES_DETAIL}'
 REDIRECT_URL_NOTES_EDIT = f'{URL_LOGIN}?next={URL_NOTES_EDIT}'
 REDIRECT_URL_NOTES_DELETE = f'{URL_LOGIN}?next={URL_NOTES_DELETE}'
-EXPECTED_URL = f'{URL_LOGIN}?next={URL_NOTES_ADD}'
 
+
+def create_redirect_url(note_url):
+    return f'{URL_LOGIN}?next={note_url}'
+
+
+REDIRECT_URLS = {
+    'add': create_redirect_url(URL_NOTES_ADD),
+    'list': create_redirect_url(URL_NOTES_LIST),
+    'success': create_redirect_url(URL_NOTES_SUCCESS),
+    'detail': create_redirect_url(URL_NOTES_DETAIL),
+    'edit': create_redirect_url(URL_NOTES_EDIT),
+    'delete': create_redirect_url(URL_NOTES_DELETE),
+}
 
 class TestBase(TestCase):
     @classmethod

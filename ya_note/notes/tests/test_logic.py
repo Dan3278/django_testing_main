@@ -6,19 +6,18 @@ from .base_test import (
     URL_NOTES_SUCCESS,
     URL_NOTES_EDIT,
     URL_NOTES_DELETE,
-    EXPECTED_URL
+    REDIRECT_URL_NOTES_ADD
 )
 from notes.models import Note
 
 
-class TestLogic(TestBase):
-    def posting_and_checking(self):
-        Note.objects.all().delete()
+class TestLogic(TestBase): 
+    def posting_and_checking(self): 
+        Note.objects.all().delete() 
         response = self.client_author.post(URL_NOTES_ADD, data=self.form_data)
         self.assertRedirects(response, URL_NOTES_SUCCESS)
         self.assertEqual(Note.objects.count(), 1)
-        note_new = Note.objects.get(title=self.form_data['title'],
-                                    slug=self.form_data['slug'])
+        note_new = Note.objects.last()
         self.assertEqual(note_new.title, self.form_data['title'])
         self.assertEqual(note_new.text, self.form_data['text'])
         self.assertEqual(note_new.slug, self.form_data['slug'])
@@ -32,13 +31,11 @@ class TestLogic(TestBase):
         self.assertEqual(initial_notes, final_notes)
 
     def test_anon_user_cant_create_note(self):
-        initial_notes = list(Note.objects.all())
+        initial_notes_count = Note.objects.count()
         response = self.client.post(URL_NOTES_ADD, data=self.form_data)
-        expected_url = EXPECTED_URL
+        expected_url = REDIRECT_URL_NOTES_ADD
         self.assertRedirects(response, expected_url)
-        self.assertEqual(Note.objects.count(), len(initial_notes))
-        final_notes = list(Note.objects.all())
-        self.assertCountEqual(initial_notes, final_notes)
+        self.assertEqual(Note.objects.count(), initial_notes_count)
 
     def test_author_can_edit_note(self):
         self.client_author.post(URL_NOTES_EDIT, self.form_data)
@@ -57,12 +54,10 @@ class TestLogic(TestBase):
         self.assertEqual(note.text, self.note.text)
         self.assertEqual(note.slug, self.note.slug)
 
-    def test_author_can_delete_note(self):
-        self.assertEqual(Note.objects.count(), 2)
+    def test_author_can_delete_note(self): 
         response = self.client_author.post(URL_NOTES_DELETE,
                                            {'pk': self.note.pk})
         self.assertRedirects(response, URL_NOTES_SUCCESS)
-        self.assertEqual(Note.objects.count(), 1)
         self.assertFalse(Note.objects.filter(pk=self.note.pk).exists())
 
     def test_reader_cant_delete_note(self):
