@@ -58,9 +58,12 @@ class TestLogic(TestBase):
         self.assertEqual(note.slug, self.note.slug)
 
     def test_author_can_delete_note(self):
-        response = self.client_author.post(URL_NOTES_DELETE)
+        self.assertEqual(Note.objects.count(), 2)
+        response = self.client_author.post(URL_NOTES_DELETE,
+                                           {'pk': self.note.pk})
         self.assertRedirects(response, URL_NOTES_SUCCESS)
-        self.assertEqual(Note.objects.count(), 0)
+        self.assertEqual(Note.objects.count(), 1)
+        self.assertFalse(Note.objects.filter(pk=self.note.pk).exists())
 
     def test_reader_cant_delete_note(self):
         note_count = Note.objects.count()

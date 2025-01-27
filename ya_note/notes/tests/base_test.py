@@ -40,7 +40,14 @@ class TestBase(TestCase):
             slug=SLUG,
             author=cls.author,
         )
-        cls.form_data = {'title': 'NEW_TITLE',
-                         'text': 'NEW_TEXT',
-                         'slug': 'NEW_SLUG'
-                         }
+        cls.note1 = Note.objects.create(
+            title='Тест заголовок 1',
+            text='Тест текст 1',
+            slug='slug-1',
+            author=cls.author,
+        )
+        cls.form_data = {
+            'title': 'NEW_TITLE',
+            'text': 'NEW_TEXT',
+            'slug': 'NEW_SLUG'
+        }
