@@ -35,17 +35,14 @@ def test_author_can_delete_comment(
     assert Comment.objects.count() == 0
 
 
-def test_not_author_cannot_edit_comment(
-    not_author_client, comment, edit_comment_url
-):
-    """Не автор НЕ может изменять чужие коментарии."""
-    response = not_author_client.post(edit_comment_url,
-                                      data=FORM_DATA)
-    assert response.status_code == HTTPStatus.NOT_FOUND
-    updated_comment = Comment.objects.get(pk=comment.pk)
-    assert updated_comment.text == comment.text
-    assert updated_comment.author == comment.author
-    assert updated_comment.news == comment.news
+def test_user_cant_delete_comment_of_other_users(not_author_client,
+                                                 comment,
+                                                 delete_comment_url): 
+    """Нельзя удалять чужие комментарии."""
+    initial_comment_count = Comment.objects.count()
+    response = not_author_client.delete(delete_comment_url)
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert Comment.objects.count() == initial_comment_count
 
 
 def test_author_can_edit_comment(
