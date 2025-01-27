@@ -17,13 +17,12 @@ class TestLogic(TestBase):
         response = self.client_author.post(URL_NOTES_ADD, data=self.form_data)
         self.assertRedirects(response, URL_NOTES_SUCCESS)
         self.assertEqual(Note.objects.count(), 1)
-        note_new = Note.objects.last()
+        note_new = Note.objects.get(title=self.form_data['title'],
+                                    slug=self.form_data['slug'])
         self.assertEqual(note_new.title, self.form_data['title'])
         self.assertEqual(note_new.text, self.form_data['text'])
-
-        form_data_new = self.form_data.copy()
-        form_data_new.pop('slug')
-        self.assertEqual(note_new.text, self.form_data['slug'])
+        self.assertEqual(note_new.slug, self.form_data['slug'])
+        self.assertEqual(note_new.author, self.client_author)
 
     def test_not_unique_slug(self):
         initial_notes = list(Note.objects.all().order_by('pk'))
