@@ -1,44 +1,38 @@
 from http import HTTPStatus
-
 import pytest
 
+EXPECTED_OK = HTTPStatus.OK
+EXPECTED_NOT_FOUND = HTTPStatus.NOT_FOUND
 
-# @pytest.mark.django_db
+URL_HOME = pytest.lazy_fixture('url_home')
+URL_DETAIL_NEWS = pytest.lazy_fixture('detail_news_url')
+URL_LOGIN = pytest.lazy_fixture('url_login')
+URL_LOGOUT = pytest.lazy_fixture('url_logout')
+URL_SIGNUP = pytest.lazy_fixture('url_signup')
+EDIT_COMMENT_URL = pytest.lazy_fixture('edit_comment_url')
+DELETE_COMMENT_URL = pytest.lazy_fixture('delete_comment_url')
+
+AUTHOR_CLIENT = pytest.lazy_fixture('author_client')
+NOT_AUTHOR_CLIENT = pytest.lazy_fixture('not_author_client')
+
 @pytest.mark.parametrize('url_fixture, client_fixture, expected_status',
-                         [
-                             (pytest.lazy_fixture('url_home'),
-                              pytest.lazy_fixture('author_client'),
-                              HTTPStatus.OK),
-                             (pytest.lazy_fixture('detail_news_url'),
-                              pytest.lazy_fixture('author_client'),
-                              HTTPStatus.OK),
-                             (pytest.lazy_fixture('url_login'),
-                              pytest.lazy_fixture('author_client'),
-                              HTTPStatus.OK),
-                             (pytest.lazy_fixture('url_logout'),
-                              pytest.lazy_fixture('author_client'),
-                              HTTPStatus.OK),
-                             (pytest.lazy_fixture('url_signup'),
-                              pytest.lazy_fixture('author_client'),
-                              HTTPStatus.OK),
-                             (pytest.lazy_fixture('edit_comment_url'),
-                              pytest.lazy_fixture('author_client'),
-                              HTTPStatus.OK),
-                             (pytest.lazy_fixture('delete_comment_url'),
-                              pytest.lazy_fixture('author_client'),
-                              HTTPStatus.OK),
-                             (pytest.lazy_fixture('edit_comment_url'),
-                              pytest.lazy_fixture('not_author_client'),
-                              HTTPStatus.NOT_FOUND),
-                             (pytest.lazy_fixture('delete_comment_url'),
-                              pytest.lazy_fixture('not_author_client'),
-                              HTTPStatus.NOT_FOUND),
+                         [ 
+                             (URL_HOME, AUTHOR_CLIENT, EXPECTED_OK),
+                             (URL_DETAIL_NEWS, AUTHOR_CLIENT, EXPECTED_OK),
+                             (URL_LOGIN, AUTHOR_CLIENT, EXPECTED_OK),
+                             (URL_LOGOUT, AUTHOR_CLIENT, EXPECTED_OK),
+                             (URL_SIGNUP, AUTHOR_CLIENT, EXPECTED_OK),
+                             (EDIT_COMMENT_URL, AUTHOR_CLIENT, EXPECTED_OK),
+                             (DELETE_COMMENT_URL, AUTHOR_CLIENT, EXPECTED_OK),
+                             (EDIT_COMMENT_URL, NOT_AUTHOR_CLIENT,
+                              EXPECTED_NOT_FOUND),
+                             (DELETE_COMMENT_URL, NOT_AUTHOR_CLIENT,
+                              EXPECTED_NOT_FOUND),
+                             (URL_LOGIN, NOT_AUTHOR_CLIENT, EXPECTED_OK),
+                             (URL_SIGNUP, NOT_AUTHOR_CLIENT, EXPECTED_OK),
                          ]
                          )
-def test_pages_availability(url_fixture,
-                            client_fixture,
-                            expected_status
-                            ):
+def test_pages_availability(url_fixture, client_fixture, expected_status):
     response = client_fixture.get(url_fixture)
     assert response.status_code == expected_status
 
