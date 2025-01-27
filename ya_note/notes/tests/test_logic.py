@@ -6,7 +6,7 @@ from .base_test import (
     URL_NOTES_SUCCESS,
     URL_NOTES_EDIT,
     URL_NOTES_DELETE,
-    URL_LOGIN
+    EXPECTED_URL
 )
 from notes.models import Note
 
@@ -34,9 +34,7 @@ class TestLogic(TestBase):
     def test_anon_user_cant_create_note(self):
         initial_notes = list(Note.objects.all())
         response = self.client.post(URL_NOTES_ADD, data=self.form_data)
-        expected_url = f'{URL_LOGIN}?next={URL_NOTES_ADD}'
-    #  Все урлы нужно рассчитать один раз заранее, до теста.
-    #  Но я уже их расчитал в base_test.py
+        expected_url = EXPECTED_URL
         self.assertRedirects(response, expected_url)
         self.assertEqual(Note.objects.count(), len(initial_notes))
 
