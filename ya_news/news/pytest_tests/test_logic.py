@@ -33,9 +33,9 @@ def test_author_can_delete_comment(author_client,
     assert_comment_count(0)
 
 
-def test_comment_deletion_restricted_to_author_only(not_author_client,
-                                                    delete_comment_url,
-                                                    comment):
+def test_non_author_cannot_delete_comment(not_author_client,
+                                          delete_comment_url,
+                                          comment):
     initial_comment_count = Comment.objects.count()
     response = not_author_client.delete(delete_comment_url)
     assert response.status_code == HTTPStatus.NOT_FOUND
@@ -47,14 +47,13 @@ def test_comment_deletion_restricted_to_author_only(not_author_client,
 
 
 @pytest.mark.django_db
-def test_comment_editing_restricted_to_author_only(not_author_client,
-                                                   edit_comment_url,
-                                                   comment):
-    initial_text = comment.text
+def test_non_author_cannot_edit_comment(not_author_client,
+                                        edit_comment_url,
+                                        comment):
     response = not_author_client.post(edit_comment_url, data=FORM_DATA)
     assert response.status_code == HTTPStatus.NOT_FOUND
     updated_comment = Comment.objects.get(pk=comment.pk)
-    assert updated_comment.text == initial_text
+    assert updated_comment.text == comment.text
     assert updated_comment.author == comment.author
     assert updated_comment.created == comment.created
 

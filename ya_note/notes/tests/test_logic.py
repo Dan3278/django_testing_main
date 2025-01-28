@@ -57,21 +57,19 @@ class TestLogic(TestBase):
 
     def test_author_can_delete_note(self):
         initial_notes_count = Note.objects.count()
-        response = self.client_author.post(URL_NOTES_DELETE,
-                                           {'pk': self.note.pk})
+        response = self.client_author.post(URL_NOTES_DELETE)
         self.assertRedirects(response, URL_NOTES_SUCCESS)
         self.assertFalse(Note.objects.filter(pk=self.note.pk).exists())
         self.assertEqual(Note.objects.count(), initial_notes_count - 1)
 
     def test_reader_cant_delete_note(self):
         note_count = Note.objects.count()
-        response = self.client_reader.post(URL_NOTES_DELETE,
-                                           {'pk': self.note.pk})
+        response = self.client_reader.post(URL_NOTES_DELETE)
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(Note.objects.count(), note_count)
         self.assertTrue(Note.objects.filter(pk=self.note.pk).exists())
         note = Note.objects.get(pk=self.note.pk)
-        self.assertNotEqual(note.author, self.client_reader)
+        self.assertEqual(note.author, self.note.author)
         self.assertEqual(note.title, self.note.title)
         self.assertEqual(note.text, self.note.text)
         self.assertEqual(note.slug, self.note.slug)
