@@ -16,7 +16,7 @@ NOT_AUTHOR_CLIENT = pytest.lazy_fixture('not_author_client')
 REDIRECT_URL = pytest.lazy_fixture('redirect_url')
 ANONYMOUS_CLIENT = pytest.lazy_fixture('client')
 REDIRECT_URL_EDIT_COMMENT = pytest.lazy_fixture('redirect_url_edit_comment')
-REDIRECT_URL_DELETE_COMMENT =pytest.lazy_fixture('redirect_url_delete_comment')
+REDIRECT_URL_DEL_COMMENT = pytest.lazy_fixture('redirect_url_delete_comment')
 
 
 @pytest.mark.parametrize('url_fixture, client_fixture, expected_status',
@@ -55,7 +55,7 @@ def test_pages_availability(url_fixture,
 @pytest.mark.django_db
 @pytest.mark.parametrize('url_fixture, expected_redirect_url', [
     (EDIT_COMMENT_URL, REDIRECT_URL_EDIT_COMMENT),
-    (DELETE_COMMENT_URL, REDIRECT_URL_DELETE_COMMENT),
+    (DELETE_COMMENT_URL, REDIRECT_URL_DEL_COMMENT),
 ])
 def test_redirect_for_anonymous_client(client,
                                        url_fixture,
