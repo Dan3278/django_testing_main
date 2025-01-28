@@ -17,6 +17,12 @@ REDIRECT_URL = pytest.lazy_fixture('redirect_url')
 ANONYMOUS_CLIENT = pytest.lazy_fixture('client')
 
 
+@pytest.fixture
+def redirect_url(url_login):
+    def _redirect_url(url_fixture):
+        return f"{url_login}?next={url_fixture}"
+    return _redirect_url
+
 @pytest.mark.parametrize('url_fixture, client_fixture, expected_status',
                          [
                              (URL_HOME, AUTHOR_CLIENT, EXPECTED_OK),
@@ -43,20 +49,20 @@ ANONYMOUS_CLIENT = pytest.lazy_fixture('client')
                               HTTPStatus.FOUND)
                          ]
                          )
-def test_pages_availability(url_fixture, client_fixture, expected_status):
+def test_pages_availability(url_fixture,
+                            client_fixture,
+                            expected_status):
     response = client_fixture.get(url_fixture)
     assert response.status_code == expected_status
 
-
-@ pytest.mark.django_db
-@ pytest.mark.parametrize('url_fixture', [
-    pytest.lazy_fixture('edit_comment_url'),
-    pytest.lazy_fixture('delete_comment_url')
-]
-)
+@pytest.mark.django_db
+@pytest.mark.parametrize('url_fixture, expected_redirect_url', [
+    (EDIT_COMMENT_URL, pytest.lazy_fixture('redirect_url')),
+    (DELETE_COMMENT_URL, pytest.lazy_fixture('redirect_url'))
+])
 def test_redirect_for_anonymous_client(client,
                                        url_fixture,
-                                       url_login,
+                                       expected_redirect_url,
                                        redirect_url):
     response = client.get(url_fixture)
     assert response.status_code == HTTPStatus.FOUND

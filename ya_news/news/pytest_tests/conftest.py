@@ -126,10 +126,3 @@ def url_signup():
 @pytest.fixture
 def redirect_url_to_detail(detail_news_url):
     return f'{detail_news_url}#comments'
-
-
-@pytest.fixture
-def redirect_url(url_login):
-    def _redirect_url(url_fixture):
-        return f"{url_login}?next={url_fixture}"
-    return _redirect_url
