@@ -23,6 +23,7 @@ def redirect_url(url_login):
         return f"{url_login}?next={url_fixture}"
     return _redirect_url
 
+
 @pytest.mark.parametrize('url_fixture, client_fixture, expected_status',
                          [
                              (URL_HOME, AUTHOR_CLIENT, EXPECTED_OK),
@@ -54,6 +55,7 @@ def test_pages_availability(url_fixture,
                             expected_status):
     response = client_fixture.get(url_fixture)
     assert response.status_code == expected_status
+
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('url_fixture, expected_redirect_url', [

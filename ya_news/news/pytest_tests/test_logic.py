@@ -33,9 +33,9 @@ def test_author_can_delete_comment(author_client,
     assert_comment_count(0)
 
 
-def test_user_cant_delete_comment_of_other_users(not_author_client,
-                                                 delete_comment_url,
-                                                 comment):
+def test_comment_deletion_restricted_to_author_only(not_author_client,
+                                                    delete_comment_url,
+                                                    comment):
     initial_comment_count = Comment.objects.count()
     response = not_author_client.delete(delete_comment_url)
     assert response.status_code == HTTPStatus.NOT_FOUND
@@ -43,8 +43,21 @@ def test_user_cant_delete_comment_of_other_users(not_author_client,
     deleted_comment = Comment.objects.get(pk=comment.pk)
     assert deleted_comment.text == comment.text
     assert deleted_comment.author == comment.author
+    assert deleted_comment.created == comment.created
 
+@pytest.mark.django_db
+def test_comment_editing_restricted_to_author_only(not_author_client,
+                                                   edit_comment_url,
+                                                   comment):
+    initial_text = comment.text
+    response = not_author_client.post(edit_comment_url, data=FORM_DATA)
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    updated_comment = Comment.objects.get(pk=comment.pk)
+    assert updated_comment.text == initial_text
+    assert updated_comment.author == comment.author
+    assert updated_comment.created == comment.created
 
+@pytest.mark.django_db
 def test_author_can_edit_comment(author_client,
                                  comment,
                                  edit_comment_url,
@@ -53,10 +66,9 @@ def test_author_can_edit_comment(author_client,
     response = author_client.post(edit_comment_url, data=FORM_DATA)
     assertRedirects(response, redirect_url_to_detail)
     updated_comment = Comment.objects.get(pk=comment.pk)
-
     assert updated_comment.text == FORM_DATA['text']
     assert updated_comment.author == comment.author
-    assert updated_comment.news == comment.news
+    assert updated_comment.created == comment.created
 
 
 @pytest.mark.parametrize('evil_words', EVIL_WORDS)
