@@ -36,16 +36,13 @@ def test_author_can_delete_comment(author_client,
 def test_user_cant_delete_comment_of_other_users(not_author_client,
                                                  delete_comment_url,
                                                  comment):
-    """Нельзя удалять чужие комментарии."""
     initial_comment_count = Comment.objects.count()
     response = not_author_client.delete(delete_comment_url)
-    assert response.status_code == HTTPStatus.FORBIDDEN
-    assert_comment_count(initial_comment_count)
-
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert Comment.objects.count() == initial_comment_count
     deleted_comment = Comment.objects.get(pk=comment.pk)
     assert deleted_comment.text == comment.text
     assert deleted_comment.author == comment.author
-    assert deleted_comment.news == comment.news
 
 
 def test_author_can_edit_comment(author_client,
@@ -62,23 +59,14 @@ def test_author_can_edit_comment(author_client,
     assert updated_comment.news == comment.news
 
 
-@pytest.mark.django_db
-def test_user_cant_delete_comment_of_other_users(author_client,
-                                                 delete_comment_url,
-                                                 comment):
-    """Нельзя удалять чужие комментарии."""
-    response = author_client.delete(delete_comment_url)
-    assert response.status_code == HTTPStatus.FOUND
-    assert_comment_count(0)
-
-
 @pytest.mark.parametrize('evil_words', EVIL_WORDS)
 def test_posting_evil_comment(author_client, detail_news_url, evil_words):
     response = author_client.post(detail_news_url, data=evil_words)
     assert response.status_code == HTTPStatus.OK
     assert 'form' in response.context
     assert 'text' in response.context['form'].errors
-    assert any(WARNING in msg for msg in response.context['form'].errors['text'])
+    assert any(
+        WARNING in msg for msg in response.context['form'].errors['text'])
     assert_comment_count(0)
 
 
