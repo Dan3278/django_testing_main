@@ -45,6 +45,7 @@ def test_comment_deletion_restricted_to_author_only(not_author_client,
     assert deleted_comment.author == comment.author
     assert deleted_comment.created == comment.created
 
+
 @pytest.mark.django_db
 def test_comment_editing_restricted_to_author_only(not_author_client,
                                                    edit_comment_url,
@@ -56,6 +57,7 @@ def test_comment_editing_restricted_to_author_only(not_author_client,
     assert updated_comment.text == initial_text
     assert updated_comment.author == comment.author
     assert updated_comment.created == comment.created
+
 
 @pytest.mark.django_db
 def test_author_can_edit_comment(author_client,

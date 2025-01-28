@@ -56,16 +56,16 @@ def test_pages_availability(url_fixture,
     response = client_fixture.get(url_fixture)
     assert response.status_code == expected_status
 
-
 @pytest.mark.django_db
 @pytest.mark.parametrize('url_fixture, expected_redirect_url', [
-    (EDIT_COMMENT_URL, pytest.lazy_fixture('redirect_url')),
-    (DELETE_COMMENT_URL, pytest.lazy_fixture('redirect_url'))
+    (EDIT_COMMENT_URL, 'redirect_url_edit_comment'),
+    (DELETE_COMMENT_URL, 'redirect_url_delete_comment'),
 ])
 def test_redirect_for_anonymous_client(client,
                                        url_fixture,
                                        expected_redirect_url,
-                                       redirect_url):
+                                       request):
+    redirect_url = request.getfixturevalue(expected_redirect_url)
     response = client.get(url_fixture)
-    assert response.status_code == HTTPStatus.FOUND
-    assert response.url == redirect_url(url_fixture)
+    assert response.status_code == EXPECTED_REDIRECT
+    assert response.url == redirect_url

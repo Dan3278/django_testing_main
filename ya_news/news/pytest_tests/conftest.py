@@ -126,3 +126,15 @@ def url_signup():
 @pytest.fixture
 def redirect_url_to_detail(detail_news_url):
     return f'{detail_news_url}#comments'
+
+
+@pytest.fixture
+def redirect_url_edit_comment(url_login, edit_comment_url):
+    """Фикстура для URL перенаправления при редактировании комментария."""
+    return f"{url_login}?next={edit_comment_url}"
+
+
+@pytest.fixture
+def redirect_url_delete_comment(url_login, delete_comment_url):
+    """Фикстура для URL перенаправления при удалении комментария."""
+    return f"{url_login}?next={delete_comment_url}"
