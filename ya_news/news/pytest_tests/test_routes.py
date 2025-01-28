@@ -44,9 +44,6 @@ ANONYMOUS_CLIENT = pytest.lazy_fixture('client')
                          ]
                          )
 def test_pages_availability(url_fixture, client_fixture, expected_status):
-        """
-        Проверяет доступность страницы для заданного URL и ожидаемого статуса.
-        """
     response = client_fixture.get(url_fixture)
     assert response.status_code == expected_status
 
@@ -57,13 +54,11 @@ def test_pages_availability(url_fixture, client_fixture, expected_status):
     pytest.lazy_fixture('delete_comment_url')
 ]
 )
+
 def test_redirect_for_anonymous_client(client,
                                        url_fixture,
                                        url_login,
                                        redirect_url):
-    """
-    Проверяет редирект для анонимного клиента при доступе к защищенным URL.
-    """
     response = client.get(url_fixture)
     assert response.status_code == HTTPStatus.FOUND
     assert response.url == redirect_url(url_fixture)
