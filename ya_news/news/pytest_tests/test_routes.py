@@ -44,9 +44,9 @@ ANONYMOUS_CLIENT = pytest.lazy_fixture('client')
                          ]
                          )
 def test_pages_availability(url_fixture, client_fixture, expected_status):
-    """
-    Проверяет доступность страницы для заданного URL и ожидаемого статуса.
-    """
+        """
+        Проверяет доступность страницы для заданного URL и ожидаемого статуса.
+        """
     response = client_fixture.get(url_fixture)
     assert response.status_code == expected_status
 
