@@ -54,7 +54,6 @@ def test_pages_availability(url_fixture, client_fixture, expected_status):
     pytest.lazy_fixture('delete_comment_url')
 ]
 )
-
 def test_redirect_for_anonymous_client(client,
                                        url_fixture,
                                        url_login,
